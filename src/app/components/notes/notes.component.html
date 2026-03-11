@@ -1,0 +1,90 @@
+<div class="min-h-screen pb-24 selection:bg-indigo-100">
+  
+  <!-- Navigation/Status Bar -->
+  <nav class="fixed top-0 inset-x-0 z-50 bg-white/60 backdrop-blur-xl border-b border-white/50 px-6 py-4 flex items-center justify-between">
+    <div></div>
+    <div class="flex items-center gap-4">
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto pt-32 px-6">
+    
+    <!-- Hero Header -->
+    <header class="mb-16 text-center">
+      <h1 class="font-outfit text-6xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
+          Notes Management
+        </span>
+      </h1>
+    </header>
+
+    <!-- Error POP UP -->
+    <div *ngIf="error" class="fixed top-10 right-10 z-[110] animate-slide-up">
+      <div class="bg-red-500 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center justify-between gap-6 border border-white/10">
+        <div class="flex items-center gap-3">
+          <i class="ph-fill ph-warning-circle text-2xl"></i>
+          <span class="font-bold tracking-tight">{{ error }}</span>
+        </div>
+        <button (click)="error = ''" class="hover:bg-white/20 p-2 rounded-xl transition-colors">
+          <i class="ph ph-x text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Controller: Note Input Component -->
+    <app-note-form 
+      [disabled]="isSubmitting" 
+      (onAdd)="addNote($event)">
+    </app-note-form>
+
+    <!-- View: Notes List -->
+    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <app-note-item 
+        *ngFor="let note of notes; let i = index" 
+        [note]="note" 
+        [index]="notes.length - i"
+        (onDelete)="deleteNote($event)">
+      </app-note-item>
+
+      <!-- Empty State -->
+      <div *ngIf="notes.length === 0 && !loading" class="text-center py-24 animate-slide-up col-span-full">
+        <h3 class="font-outfit text-3xl font-bold text-slate-900 mb-3 tracking-tight">Your mind is an open book</h3>
+        <p class="text-slate-500 font-medium max-w-xs mx-auto mb-10">Start writing your next big idea. It only takes a second to begin.</p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-32 space-y-6">
+      <div class="relative w-16 h-16">
+        <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+      </div>
+      <div class="flex flex-col items-center">
+        <p class="text-slate-900 font-bold tracking-tight text-xl animate-pulse">Syncing Symphony</p>
+        <p class="text-slate-400 text-sm font-medium">Checking your decentralized vault...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="mt-24 border-t border-slate-200/50 py-12 px-6">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">© 2026 Arif Hidayat</p>
+      <div class="flex items-center gap-8">
+        <i class="ph ph-shield-check-bold text-2xl"></i>
+        <i class="ph ph-cloud-check-bold text-2xl"></i>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Success Toast -->
+  <div *ngIf="successMessage" class="fixed bottom-10 right-10 z-[100] animate-slide-up">
+    <div class="bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10">
+      <div class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+        <i class="ph-bold ph-check text-[10px]"></i>
+      </div>
+      <span class="font-bold tracking-tight text-sm">{{ successMessage }}</span>
+    </div>
+  </div>
+
+</div>
